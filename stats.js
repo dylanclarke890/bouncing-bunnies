@@ -160,18 +160,18 @@ var Stats = function () {
   g.fillRect(0, 0, z.width, z.height);
   b = g.getImageData(0, 0, z.width, z.height);
   function I(N, M, K) {
-    var J, O, L;
-    for (O = 0; O < 30; O++) {
-      for (J = 0; J < 73; J++) {
-        L = (J + O * 74) * 4;
+    let L;
+    for (let i = 0; i < 30; i++) {
+      for (let j = 0; j < 73; j++) {
+        L = (j + i * 74) * 4;
         N[L] = N[L + 4];
         N[L + 1] = N[L + 5];
         N[L + 2] = N[L + 6];
       }
     }
-    for (O = 0; O < 30; O++) {
-      L = (73 + O * 74) * 4;
-      if (O < M) {
+    for (let i = 0; i < 30; i++) {
+      L = (73 + i * 74) * 4;
+      if (i < M) {
         N[L] = y[K].bg.r;
         N[L + 1] = y[K].bg.g;
         N[L + 2] = y[K].bg.b;
@@ -184,7 +184,7 @@ var Stats = function () {
   }
   function H() {
     j++;
-    j == u ? (j = 0) : j;
+    j = j == u ? 0 : j;
     fpsDiv.style.display = "none";
     msDiv.style.display = "none";
     h.style.display = "none";
