@@ -1,8 +1,23 @@
+class Color {
+  constructor({ ...color } = {}) {
+    this.r = color.r;
+    this.g = color.g;
+    this.b = color.b;
+  }
+}
+
+class ColorScheme {
+  constructor(bg, fg) {
+    this.bg = bg;
+    this.fg = fg;
+  }
+}
+
 function Stats() {
   let maxFps = 0,
     minFps = 1000;
   var j = 0,
-    u = 2,
+    slides = 2,
     C = 0,
     E = Date.now(),
     w = E,
@@ -20,43 +35,43 @@ function Stats() {
     z,
     g,
     b,
-    y = {
-      fps: {
-        bg: {
+    colorSchemes = {
+      fps: new ColorScheme(
+        {
           r: 16,
           g: 16,
           b: 48,
         },
-        fg: {
+        {
           r: 0,
           g: 255,
           b: 255,
-        },
-      },
-      ms: {
-        bg: {
+        }
+      ),
+      ms: new ColorScheme(
+        {
           r: 16,
           g: 48,
           b: 16,
         },
-        fg: {
+        {
           r: 0,
           g: 255,
           b: 0,
-        },
-      },
-      mem: {
-        bg: {
+        }
+      ),
+      mem: new ColorScheme(
+        {
           r: 48,
           g: 16,
           b: 26,
         },
-        fg: {
+        {
           r: 255,
           g: 0,
           b: 128,
-        },
-      },
+        }
+      ),
     };
   const parent = document.createElement("div");
   parent.style.fontFamily = "Helvetica, Arial, sans-serif";
@@ -67,14 +82,14 @@ function Stats() {
   parent.style.cursor = "pointer";
   parent.addEventListener("click", H, false);
   const fpsDiv = document.createElement("div");
-  fpsDiv.style.backgroundColor = `rgb(${Math.floor(y.fps.bg.r / 2)},${Math.floor(
-    y.fps.bg.g / 2
-  )},${Math.floor(y.fps.bg.b / 2)})`;
+  fpsDiv.style.backgroundColor = `rgb(${Math.floor(colorSchemes.fps.bg.r / 2)},${Math.floor(
+    colorSchemes.fps.bg.g / 2
+  )},${Math.floor(colorSchemes.fps.bg.b / 2)})`;
   fpsDiv.style.padding = "2px 0px 3px 0px";
   parent.appendChild(fpsDiv);
   const fpsText = document.createElement("div");
   fpsText.innerHTML = "<strong>FPS</strong>";
-  fpsText.style.color = `rgb(${y.fps.fg.r},${y.fps.fg.g},${y.fps.fg.b})`;
+  fpsText.style.color = `rgb(${colorSchemes.fps.fg.r},${colorSchemes.fps.fg.g},${colorSchemes.fps.fg.b})`;
   fpsText.style.margin = "0px 0px 1px 3px";
   fpsDiv.appendChild(fpsText);
   const canvas = document.createElement("canvas");
@@ -84,24 +99,24 @@ function Stats() {
   canvas.style.marginLeft = "3px";
   fpsDiv.appendChild(canvas);
   const ctx = canvas.getContext("2d");
-  ctx.fillStyle = `rgb(${y.fps.bg.r},${y.fps.bg.g},${y.fps.bg.b})`;
+  ctx.fillStyle = `rgb(${colorSchemes.fps.bg.r},${colorSchemes.fps.bg.g},${colorSchemes.fps.bg.b})`;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   B = ctx.getImageData(0, 0, canvas.width, canvas.height);
   const msDiv = document.createElement("div");
   msDiv.style.backgroundColor =
     "rgb(" +
-    Math.floor(y.ms.bg.r / 2) +
+    Math.floor(colorSchemes.ms.bg.r / 2) +
     "," +
-    Math.floor(y.ms.bg.g / 2) +
+    Math.floor(colorSchemes.ms.bg.g / 2) +
     "," +
-    Math.floor(y.ms.bg.b / 2) +
+    Math.floor(colorSchemes.ms.bg.b / 2) +
     ")";
   msDiv.style.padding = "2px 0px 3px 0px";
   msDiv.style.display = "none";
   parent.appendChild(msDiv);
   const msText = document.createElement("div");
   msText.innerHTML = "<strong>MS</strong>";
-  msText.style.color = `rgb(${y.ms.fg.r},${y.ms.fg.g},${y.ms.fg.b})`;
+  msText.style.color = `rgb(${colorSchemes.ms.fg.r},${colorSchemes.ms.fg.g},${colorSchemes.ms.fg.b})`;
   msText.style.margin = "0px 0px 1px 3px";
   msDiv.appendChild(msText);
   p = document.createElement("canvas");
@@ -111,24 +126,24 @@ function Stats() {
   p.style.marginLeft = "3px";
   msDiv.appendChild(p);
   D = p.getContext("2d");
-  D.fillStyle = "rgb(" + y.ms.bg.r + "," + y.ms.bg.g + "," + y.ms.bg.b + ")";
+  D.fillStyle = `rgb(${colorSchemes.ms.bg.r},${colorSchemes.ms.bg.g},${colorSchemes.ms.bg.b})`;
   D.fillRect(0, 0, p.width, p.height);
   l = D.getImageData(0, 0, p.width, p.height);
   try {
     if (webkitPerformance && webkitPerformance.memory.totalJSHeapSize) {
-      u = 3;
+      slides = 3;
     }
   } catch (x) {}
   const memDiv = document.createElement("div");
-  memDiv.style.backgroundColor = `rgb(${Math.floor(y.mem.bg.r / 2)}, ${Math.floor(
-    y.mem.bg.g / 2
-  )}, ${Math.floor(y.mem.bg.b / 2)})`;
+  memDiv.style.backgroundColor = `rgb(${Math.floor(colorSchemes.mem.bg.r / 2)}, ${Math.floor(
+    colorSchemes.mem.bg.g / 2
+  )}, ${Math.floor(colorSchemes.mem.bg.b / 2)})`;
   memDiv.style.padding = "2px 0px 3px 0px";
   memDiv.style.display = "none";
   parent.appendChild(memDiv);
   const memText = document.createElement("div");
   memText.innerHTML = "<strong>MEM</strong>";
-  memText.style.color = `rgb(${y.mem.fg.r},${y.mem.fg.g},${y.mem.fg.b}`;
+  memText.style.color = `rgb(${colorSchemes.mem.fg.r},${colorSchemes.mem.fg.g},${colorSchemes.mem.fg.b}`;
   memText.style.margin = "0px 0px 1px 3px";
   memDiv.appendChild(memText);
   z = document.createElement("canvas");
@@ -154,19 +169,19 @@ function Stats() {
     for (let i = 0; i < 30; i++) {
       L = (73 + i * 74) * 4;
       if (i < M) {
-        N[L] = y[K].bg.r;
-        N[L + 1] = y[K].bg.g;
-        N[L + 2] = y[K].bg.b;
+        N[L] = colorSchemes[K].bg.r;
+        N[L + 1] = colorSchemes[K].bg.g;
+        N[L + 2] = colorSchemes[K].bg.b;
       } else {
-        N[L] = y[K].fg.r;
-        N[L + 1] = y[K].fg.g;
-        N[L + 2] = y[K].fg.b;
+        N[L] = colorSchemes[K].fg.r;
+        N[L + 1] = colorSchemes[K].fg.g;
+        N[L + 2] = colorSchemes[K].fg.b;
       }
     }
   }
   function H() {
     j++;
-    j = j == u ? 0 : j;
+    j = j == slides ? 0 : j;
     fpsDiv.style.display = "none";
     msDiv.style.display = "none";
     memDiv.style.display = "none";
@@ -201,7 +216,7 @@ function Stats() {
         I(B.data, Math.min(30, 30 - (fps / 100) * 30), "fps");
         fpsText.innerHTML = `<strong>${fps} FPS</strong> (${minFps}-${maxFps})`;
         ctx.putImageData(B, 0, 0);
-        if (u == 3) {
+        if (slides == 3) {
           v = webkitPerformance.memory.usedJSHeapSize * 9.54e-7;
           o = Math.min(o, v);
           s = Math.max(s, v);
