@@ -1,23 +1,22 @@
 var Stats = function () {
+  let maxFps = 1000,
+    minFps = 0;
   var j = 0,
     u = 2,
     C = 0,
     E = new Date().getTime(),
     w = E,
     f = E,
-    m = 0,
-    e = 1000,
-    i = 0,
-    F,
-    q,
-    c,
-    d,
+    fpsDiv,
+    fpsText,
+    canvas,
+    ctx,
     B,
     k = 0,
     G = 1000,
     a = 0,
-    A,
-    t,
+    msDiv,
+    msText,
     p,
     D,
     l,
@@ -67,16 +66,16 @@ var Stats = function () {
         },
       },
     };
-  const statsContainer = document.createElement("div");
-  statsContainer.style.fontFamily = "Helvetica, Arial, sans-serif";
-  statsContainer.style.textAlign = "left";
-  statsContainer.style.fontSize = "9px";
-  statsContainer.style.opacity = "0.9";
-  statsContainer.style.width = "80px";
-  statsContainer.style.cursor = "pointer";
-  statsContainer.addEventListener("click", H, false);
-  F = document.createElement("div");
-  F.style.backgroundColor =
+  const parent = document.createElement("div");
+  parent.style.fontFamily = "Helvetica, Arial, sans-serif";
+  parent.style.textAlign = "left";
+  parent.style.fontSize = "9px";
+  parent.style.opacity = "0.9";
+  parent.style.width = "80px";
+  parent.style.cursor = "pointer";
+  parent.addEventListener("click", H, false);
+  fpsDiv = document.createElement("div");
+  fpsDiv.style.backgroundColor =
     "rgb(" +
     Math.floor(y.fps.bg.r / 2) +
     "," +
@@ -84,26 +83,27 @@ var Stats = function () {
     "," +
     Math.floor(y.fps.bg.b / 2) +
     ")";
-  F.style.padding = "2px 0px 3px 0px";
-  statsContainer.appendChild(F);
-  q = document.createElement("div");
-  q.innerHTML = "<strong>FPS</strong>";
-  q.style.color =
+  fpsDiv.style.padding = "2px 0px 3px 0px";
+  parent.appendChild(fpsDiv);
+  fpsText = document.createElement("div");
+  fpsText.innerHTML = "<strong>FPS</strong>";
+  fpsText.style.color =
     "rgb(" + y.fps.fg.r + "," + y.fps.fg.g + "," + y.fps.fg.b + ")";
-  q.style.margin = "0px 0px 1px 3px";
-  F.appendChild(q);
-  c = document.createElement("canvas");
-  c.width = 74;
-  c.height = 30;
-  c.style.display = "block";
-  c.style.marginLeft = "3px";
-  F.appendChild(c);
-  d = c.getContext("2d");
-  d.fillStyle = "rgb(" + y.fps.bg.r + "," + y.fps.bg.g + "," + y.fps.bg.b + ")";
-  d.fillRect(0, 0, c.width, c.height);
-  B = d.getImageData(0, 0, c.width, c.height);
-  A = document.createElement("div");
-  A.style.backgroundColor =
+  fpsText.style.margin = "0px 0px 1px 3px";
+  fpsDiv.appendChild(fpsText);
+  canvas = document.createElement("canvas");
+  canvas.width = 74;
+  canvas.height = 30;
+  canvas.style.display = "block";
+  canvas.style.marginLeft = "3px";
+  fpsDiv.appendChild(canvas);
+  ctx = canvas.getContext("2d");
+  ctx.fillStyle =
+    "rgb(" + y.fps.bg.r + "," + y.fps.bg.g + "," + y.fps.bg.b + ")";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  B = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  msDiv = document.createElement("div");
+  msDiv.style.backgroundColor =
     "rgb(" +
     Math.floor(y.ms.bg.r / 2) +
     "," +
@@ -111,20 +111,21 @@ var Stats = function () {
     "," +
     Math.floor(y.ms.bg.b / 2) +
     ")";
-  A.style.padding = "2px 0px 3px 0px";
-  A.style.display = "none";
-  statsContainer.appendChild(A);
-  t = document.createElement("div");
-  t.innerHTML = "<strong>MS</strong>";
-  t.style.color = "rgb(" + y.ms.fg.r + "," + y.ms.fg.g + "," + y.ms.fg.b + ")";
-  t.style.margin = "0px 0px 1px 3px";
-  A.appendChild(t);
+  msDiv.style.padding = "2px 0px 3px 0px";
+  msDiv.style.display = "none";
+  parent.appendChild(msDiv);
+  msText = document.createElement("div");
+  msText.innerHTML = "<strong>MS</strong>";
+  msText.style.color =
+    "rgb(" + y.ms.fg.r + "," + y.ms.fg.g + "," + y.ms.fg.b + ")";
+  msText.style.margin = "0px 0px 1px 3px";
+  msDiv.appendChild(msText);
   p = document.createElement("canvas");
   p.width = 74;
   p.height = 30;
   p.style.display = "block";
   p.style.marginLeft = "3px";
-  A.appendChild(p);
+  msDiv.appendChild(p);
   D = p.getContext("2d");
   D.fillStyle = "rgb(" + y.ms.bg.r + "," + y.ms.bg.g + "," + y.ms.bg.b + ")";
   D.fillRect(0, 0, p.width, p.height);
@@ -145,7 +146,7 @@ var Stats = function () {
     ")";
   h.style.padding = "2px 0px 3px 0px";
   h.style.display = "none";
-  statsContainer.appendChild(h);
+  parent.appendChild(h);
   n = document.createElement("div");
   n.innerHTML = "<strong>MEM</strong>";
   n.style.color =
@@ -188,15 +189,15 @@ var Stats = function () {
   function H() {
     j++;
     j == u ? (j = 0) : j;
-    F.style.display = "none";
-    A.style.display = "none";
+    fpsDiv.style.display = "none";
+    msDiv.style.display = "none";
     h.style.display = "none";
     switch (j) {
       case 0:
-        F.style.display = "block";
+        fpsDiv.style.display = "block";
         break;
       case 1:
-        A.style.display = "block";
+        msDiv.style.display = "block";
         break;
       case 2:
         h.style.display = "block";
@@ -204,7 +205,7 @@ var Stats = function () {
     }
   }
   return {
-    domElement: statsContainer,
+    domElement: parent,
     update: function () {
       C++;
       E = new Date().getTime();
@@ -212,16 +213,16 @@ var Stats = function () {
       G = Math.min(G, k);
       a = Math.max(a, k);
       I(l.data, Math.min(30, 30 - (k / 200) * 30), "ms");
-      t.innerHTML = "<strong>" + k + " MS</strong> (" + G + "-" + a + ")";
+      msText.innerHTML = "<strong>" + k + " MS</strong> (" + G + "-" + a + ")";
       D.putImageData(l, 0, 0);
       w = E;
       if (E > f + 1000) {
-        m = Math.round((C * 1000) / (E - f));
-        e = Math.min(e, m);
-        i = Math.max(i, m);
-        I(B.data, Math.min(30, 30 - (m / 100) * 30), "fps");
-        q.innerHTML = "<strong>" + m + " FPS</strong> (" + e + "-" + i + ")";
-        d.putImageData(B, 0, 0);
+        const fps = Math.round((C * 1000) / (E - f));
+        minFps = Math.min(minFps, fps);
+        maxFps = Math.max(maxFps, fps);
+        I(B.data, Math.min(30, 30 - (fps / 100) * 30), "fps");
+        fpsText.innerHTML = `<strong>${fps} FPS</strong> (${minFps}-${maxFps})`;
+        ctx.putImageData(B, 0, 0);
         if (u == 3) {
           v = webkitPerformance.memory.usedJSHeapSize * 9.54e-7;
           o = Math.min(o, v);
