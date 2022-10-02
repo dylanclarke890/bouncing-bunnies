@@ -74,18 +74,21 @@ class Stats {
     parent.addEventListener("click", this.nextPanel, false);
 
     const fpsDiv = this.panelContainer("fps", "block", parent);
+    this.fpsDiv = fpsDiv;
     const fpsText = this.panelText("fps", fpsDiv);
     const [fpsCtx, fpsData] = this.panelCanvas(fpsDiv, this.colorSchemes.fps.bg);
 
     const msDiv = this.panelContainer("ms", "none", parent);
+    this.msDiv = msDiv;
     const msText = this.panelText("ms", msDiv);
     const [msCtx, msData] = this.panelCanvas(msDiv, this.colorSchemes.ms.bg);
 
     try {
-      if (webkitPerformance && webkitPerformance.memory.totalJSHeapSize) this.maxPanels = 3;
-    } catch (ex) {}
+      if (performance && performance.memory.totalJSHeapSize) this.maxPanels = 3;
+    } catch (ex) { }
 
     const memDiv = this.panelContainer("mem", "none", parent);
+    this.memDiv = memDiv;
     const memText = this.panelText("mem", memDiv);
     const [memCtx, memData] = this.panelCanvas(memDiv, this.colorSchemes.mem.bg);
 
@@ -123,15 +126,15 @@ class Stats {
       maxMem = 0;
 
     let framesThisSec = 0,
-      now = Date.now(),
+      now = performance.now(),
       last = now,
       lastFrame = now;
 
     this.domElement = parent;
     this.update = function () {
       framesThisSec++;
-      now = Date.now();
-      const ms = now - last;
+      now = performance.now();
+      const ms = Math.round(now - last);
       minMs = Math.min(minMs, ms);
       maxMs = Math.max(maxMs, ms);
       drawPanelData(msData.data, Math.min(30, 30 - (ms / 200) * 30), this.colorSchemes.ms);
@@ -146,13 +149,11 @@ class Stats {
         fpsText.innerHTML = `<strong>${fps} FPS</strong> (${minFps}-${maxFps})`;
         fpsCtx.putImageData(fpsData, 0, 0);
         if (this.maxPanels === 3) {
-          const mem = webkitPerformance.memory.usedJSHeapSize * 9.54e-7;
+          const mem = Math.round(performance.memory.usedJSHeapSize * 9.54e-7);
           minMem = Math.min(minMem, mem);
           maxMem = Math.max(maxMem, mem);
           drawPanelData(memData.data, Math.min(30, 30 - mem / 2), this.colorSchemes.mem);
-          memText.innerHTML = `<strong>${Math.round(mem)} MEM</strong> (${Math.round(
-            minMem
-          )}-${Math.round(maxMem)})`;
+          memText.innerHTML = `<strong>${mem} MEM</strong> (${minMem}-${maxMem})`;
           memCtx.putImageData(memData, 0, 0);
         }
         lastFrame = now;
@@ -204,19 +205,19 @@ class Stats {
     this.currentPanelIndex++;
     this.currentPanelIndex = this.currentPanelIndex == this.maxPanels ? 0 : this.currentPanelIndex;
 
-    fpsDiv.style.display = "none";
-    msDiv.style.display = "none";
-    memDiv.style.display = "none";
+    this.fpsDiv.style.display = "none";
+    this.msDiv.style.display = "none";
+    this.memDiv.style.display = "none";
 
     switch (this.currentPanelIndex) {
       case 0:
-        fpsDiv.style.display = "block";
+        this.fpsDiv.style.display = "block";
         break;
       case 1:
-        msDiv.style.display = "block";
+        this.msDiv.style.display = "block";
         break;
       case 2:
-        memDiv.style.display = "block";
+        this.memDiv.style.display = "block";
         break;
       default:
         break;
