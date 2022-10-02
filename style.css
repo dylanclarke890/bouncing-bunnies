@@ -1,0 +1,19 @@
+		body {
+			background: #000000;
+			color: #ffffff;
+			font-family: arial;
+			font-size: 120%;
+		}
+
+		.wrap {
+			width: 640px;
+			margin: 0 auto;
+		}
+
+		canvas {
+			border: 0px solid #0f0;
+		}
+
+		a {
+			color: #0f0;
+		}
