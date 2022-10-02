@@ -28,19 +28,12 @@ function Stats() {
     E = Date.now(),
     w = E,
     f = E,
-    B,
     k = 0,
     G = 1000,
     a = 0,
-    p,
-    D,
-    l,
     v = 0,
     o = 1000,
     s = 0,
-    z,
-    g,
-    b,
     colorSchemes = {
       fps: new ColorScheme(
         {
@@ -79,6 +72,7 @@ function Stats() {
         }
       ),
     };
+
   const parent = document.createElement("div");
   assignStyles(parent, {
     fontFamily: "Helvetica, Arial, sans-serif",
@@ -89,6 +83,7 @@ function Stats() {
     cursor: "pointer",
   });
   parent.addEventListener("click", togglePanel, false);
+
   const fpsDiv = document.createElement("div");
   assignStyles(fpsDiv, {
     backgroundColor: `rgb(${Math.floor(colorSchemes.fps.bg.r / 2)},${Math.floor(
@@ -97,6 +92,7 @@ function Stats() {
     padding: "2px 0px 3px 0px",
   });
   parent.appendChild(fpsDiv);
+
   const fpsText = document.createElement("div");
   fpsText.innerHTML = "<strong>FPS</strong>";
   assignStyles(fpsText, {
@@ -104,15 +100,18 @@ function Stats() {
     margin: "0px 0px 1px 3px",
   });
   fpsDiv.appendChild(fpsText);
-  const canvas = document.createElement("canvas");
-  canvas.width = 74;
-  canvas.height = 30;
-  assignStyles(canvas, { display: "block", marginLeft: "3px" });
-  fpsDiv.appendChild(canvas);
-  const ctx = canvas.getContext("2d");
-  ctx.fillStyle = `rgb(${colorSchemes.fps.bg.r},${colorSchemes.fps.bg.g},${colorSchemes.fps.bg.b})`;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  B = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+  const fpsCanv = document.createElement("canvas");
+  fpsCanv.width = 74;
+  fpsCanv.height = 30;
+  assignStyles(fpsCanv, { display: "block", marginLeft: "3px" });
+  fpsDiv.appendChild(fpsCanv);
+
+  const fpsCtx = fpsCanv.getContext("2d");
+  fpsCtx.fillStyle = `rgb(${colorSchemes.fps.bg.r},${colorSchemes.fps.bg.g},${colorSchemes.fps.bg.b})`;
+  fpsCtx.fillRect(0, 0, fpsCanv.width, fpsCanv.height);
+  const fpsData = fpsCtx.getImageData(0, 0, fpsCanv.width, fpsCanv.height);
+
   const msDiv = document.createElement("div");
   assignStyles(msDiv, {
     backgroundColor: `rgb(${Math.floor(colorSchemes.ms.bg.r / 2)},${Math.floor(
@@ -122,6 +121,7 @@ function Stats() {
     display: "none",
   });
   parent.appendChild(msDiv);
+
   const msText = document.createElement("div");
   msText.innerHTML = "<strong>MS</strong>";
   assignStyles(fpsText, {
@@ -129,18 +129,22 @@ function Stats() {
     margin: "0px 0px 1px 3px",
   });
   msDiv.appendChild(msText);
-  p = document.createElement("canvas");
-  p.width = 74;
-  p.height = 30;
-  assignStyles(p, { display: "block", marginLeft: "3px" });
-  msDiv.appendChild(p);
-  D = p.getContext("2d");
-  D.fillStyle = `rgb(${colorSchemes.ms.bg.r},${colorSchemes.ms.bg.g},${colorSchemes.ms.bg.b})`;
-  D.fillRect(0, 0, p.width, p.height);
-  l = D.getImageData(0, 0, p.width, p.height);
+
+  const msCanv = document.createElement("canvas");
+  msCanv.width = 74;
+  msCanv.height = 30;
+  assignStyles(msCanv, { display: "block", marginLeft: "3px" });
+  msDiv.appendChild(msCanv);
+
+  const msCtx = msCanv.getContext("2d");
+  msCtx.fillStyle = `rgb(${colorSchemes.ms.bg.r},${colorSchemes.ms.bg.g},${colorSchemes.ms.bg.b})`;
+  msCtx.fillRect(0, 0, msCanv.width, msCanv.height);
+  const msData = msCtx.getImageData(0, 0, msCanv.width, msCanv.height);
+
   try {
     if (webkitPerformance && webkitPerformance.memory.totalJSHeapSize) panels = 3;
   } catch (ex) {}
+
   const memDiv = document.createElement("div");
   memDiv.style.backgroundColor = `rgb(${Math.floor(colorSchemes.mem.bg.r / 2)}, ${Math.floor(
     colorSchemes.mem.bg.g / 2
@@ -148,20 +152,24 @@ function Stats() {
   memDiv.style.padding = "2px 0px 3px 0px";
   memDiv.style.display = "none";
   parent.appendChild(memDiv);
+
   const memText = document.createElement("div");
   memText.innerHTML = "<strong>MEM</strong>";
   memText.style.color = `rgb(${colorSchemes.mem.fg.r},${colorSchemes.mem.fg.g},${colorSchemes.mem.fg.b}`;
   memText.style.margin = "0px 0px 1px 3px";
   memDiv.appendChild(memText);
-  z = document.createElement("canvas");
-  z.width = 74;
-  z.height = 30;
-  assignStyles(z, { display: "block", marginLeft: "3px" });
-  memDiv.appendChild(z);
-  g = z.getContext("2d");
-  g.fillStyle = "#301010";
-  g.fillRect(0, 0, z.width, z.height);
-  b = g.getImageData(0, 0, z.width, z.height);
+
+  const memCanv = document.createElement("canvas");
+  memCanv.width = 74;
+  memCanv.height = 30;
+  assignStyles(memCanv, { display: "block", marginLeft: "3px" });
+  memDiv.appendChild(memCanv);
+
+  const memCtx = memCanv.getContext("2d");
+  memCtx.fillStyle = "#301010";
+  memCtx.fillRect(0, 0, memCanv.width, memCanv.height);
+  const memData = memCtx.getImageData(0, 0, memCanv.width, memCanv.height);
+
   function I(N, M, K) {
     let L;
     for (let i = 0; i < 30; i++) {
@@ -213,26 +221,26 @@ function Stats() {
       k = E - w;
       G = Math.min(G, k);
       a = Math.max(a, k);
-      I(l.data, Math.min(30, 30 - (k / 200) * 30), "ms");
+      I(msData.data, Math.min(30, 30 - (k / 200) * 30), "ms");
       msText.innerHTML = `<strong>${k} MS</strong>(${G}-${a})`;
-      D.putImageData(l, 0, 0);
+      msCtx.putImageData(msData, 0, 0);
       w = E;
       if (E > f + 1000) {
         const fps = Math.round((C * 1000) / (E - f));
         minFps = Math.min(minFps, fps);
         maxFps = Math.max(maxFps, fps);
-        I(B.data, Math.min(30, 30 - (fps / 100) * 30), "fps");
+        I(fpsData.data, Math.min(30, 30 - (fps / 100) * 30), "fps");
         fpsText.innerHTML = `<strong>${fps} FPS</strong> (${minFps}-${maxFps})`;
-        ctx.putImageData(B, 0, 0);
+        fpsCtx.putImageData(fpsData, 0, 0);
         if (panels == 3) {
           v = webkitPerformance.memory.usedJSHeapSize * 9.54e-7;
           o = Math.min(o, v);
           s = Math.max(s, v);
-          I(b.data, Math.min(30, 30 - v / 2), "mem");
+          I(memData.data, Math.min(30, 30 - v / 2), "mem");
           memText.innerHTML = `<strong>${Math.round(v)} MEM</strong> (${Math.round(o)}-${Math.round(
             s
           )})`;
-          g.putImageData(b, 0, 0);
+          memCtx.putImageData(memData, 0, 0);
         }
         f = E;
         C = 0;
