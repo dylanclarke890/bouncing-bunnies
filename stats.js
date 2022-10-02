@@ -1,4 +1,4 @@
-var Stats = function () {
+function Stats() {
   let maxFps = 0,
     minFps = 1000;
   var j = 0,
@@ -7,24 +7,16 @@ var Stats = function () {
     E = Date.now(),
     w = E,
     f = E,
-    fpsDiv,
-    fpsText,
-    canvas,
-    ctx,
     B,
     k = 0,
     G = 1000,
     a = 0,
-    msDiv,
-    msText,
     p,
     D,
     l,
     v = 0,
     o = 1000,
     s = 0,
-    h,
-    n,
     z,
     g,
     b,
@@ -74,28 +66,28 @@ var Stats = function () {
   parent.style.width = "80px";
   parent.style.cursor = "pointer";
   parent.addEventListener("click", H, false);
-  fpsDiv = document.createElement("div");
+  const fpsDiv = document.createElement("div");
   fpsDiv.style.backgroundColor = `rgb(${Math.floor(y.fps.bg.r / 2)},${Math.floor(
     y.fps.bg.g / 2
   )},${Math.floor(y.fps.bg.b / 2)})`;
   fpsDiv.style.padding = "2px 0px 3px 0px";
   parent.appendChild(fpsDiv);
-  fpsText = document.createElement("div");
+  const fpsText = document.createElement("div");
   fpsText.innerHTML = "<strong>FPS</strong>";
   fpsText.style.color = `rgb(${y.fps.fg.r},${y.fps.fg.g},${y.fps.fg.b})`;
   fpsText.style.margin = "0px 0px 1px 3px";
   fpsDiv.appendChild(fpsText);
-  canvas = document.createElement("canvas");
+  const canvas = document.createElement("canvas");
   canvas.width = 74;
   canvas.height = 30;
   canvas.style.display = "block";
   canvas.style.marginLeft = "3px";
   fpsDiv.appendChild(canvas);
-  ctx = canvas.getContext("2d");
+  const ctx = canvas.getContext("2d");
   ctx.fillStyle = `rgb(${y.fps.bg.r},${y.fps.bg.g},${y.fps.bg.b})`;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   B = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  msDiv = document.createElement("div");
+  const msDiv = document.createElement("div");
   msDiv.style.backgroundColor =
     "rgb(" +
     Math.floor(y.ms.bg.r / 2) +
@@ -107,7 +99,7 @@ var Stats = function () {
   msDiv.style.padding = "2px 0px 3px 0px";
   msDiv.style.display = "none";
   parent.appendChild(msDiv);
-  msText = document.createElement("div");
+  const msText = document.createElement("div");
   msText.innerHTML = "<strong>MS</strong>";
   msText.style.color = `rgb(${y.ms.fg.r},${y.ms.fg.g},${y.ms.fg.b})`;
   msText.style.margin = "0px 0px 1px 3px";
@@ -127,24 +119,24 @@ var Stats = function () {
       u = 3;
     }
   } catch (x) {}
-  h = document.createElement("div");
-  h.style.backgroundColor = `rgb(${Math.floor(y.mem.bg.r / 2)}, ${Math.floor(
+  const memDiv = document.createElement("div");
+  memDiv.style.backgroundColor = `rgb(${Math.floor(y.mem.bg.r / 2)}, ${Math.floor(
     y.mem.bg.g / 2
   )}, ${Math.floor(y.mem.bg.b / 2)})`;
-  h.style.padding = "2px 0px 3px 0px";
-  h.style.display = "none";
-  parent.appendChild(h);
-  n = document.createElement("div");
-  n.innerHTML = "<strong>MEM</strong>";
-  n.style.color = `rgb(${y.mem.fg.r},${y.mem.fg.g},${y.mem.fg.b}`;
-  n.style.margin = "0px 0px 1px 3px";
-  h.appendChild(n);
+  memDiv.style.padding = "2px 0px 3px 0px";
+  memDiv.style.display = "none";
+  parent.appendChild(memDiv);
+  const memText = document.createElement("div");
+  memText.innerHTML = "<strong>MEM</strong>";
+  memText.style.color = `rgb(${y.mem.fg.r},${y.mem.fg.g},${y.mem.fg.b}`;
+  memText.style.margin = "0px 0px 1px 3px";
+  memDiv.appendChild(memText);
   z = document.createElement("canvas");
   z.width = 74;
   z.height = 30;
   z.style.display = "block";
   z.style.marginLeft = "3px";
-  h.appendChild(z);
+  memDiv.appendChild(z);
   g = z.getContext("2d");
   g.fillStyle = "#301010";
   g.fillRect(0, 0, z.width, z.height);
@@ -177,7 +169,7 @@ var Stats = function () {
     j = j == u ? 0 : j;
     fpsDiv.style.display = "none";
     msDiv.style.display = "none";
-    h.style.display = "none";
+    memDiv.style.display = "none";
     switch (j) {
       case 0:
         fpsDiv.style.display = "block";
@@ -186,7 +178,7 @@ var Stats = function () {
         msDiv.style.display = "block";
         break;
       case 2:
-        h.style.display = "block";
+        memDiv.style.display = "block";
         break;
     }
   }
@@ -214,7 +206,9 @@ var Stats = function () {
           o = Math.min(o, v);
           s = Math.max(s, v);
           I(b.data, Math.min(30, 30 - v / 2), "mem");
-          n.innerHTML = `<strong>${Math.round(v)} MEM</strong> (${Math.round(o)}-${Math.round(s)})`;
+          memText.innerHTML = `<strong>${Math.round(v)} MEM</strong> (${Math.round(o)}-${Math.round(
+            s
+          )})`;
           g.putImageData(b, 0, 0);
         }
         f = E;
@@ -222,4 +216,4 @@ var Stats = function () {
       }
     },
   };
-};
+}
