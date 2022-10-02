@@ -10,80 +10,66 @@
 	<script>
 		class Bunny {
 			constructor() {
-				this.speedX = 0;
-				this.speedY = 0;
+				this.speedX = Math.random() * 10;
+				this.speedY = (Math.random() * 10) - 5;
 				this.x = 0;
 				this.y = 0;
 			}
 		}
 
-		let snapping = false,
-			bcolor = "rgba(255, 255, 255, 1)";
+		let snapping = false;
+		let bcolor = "rgba(255, 255, 255, 1)";
 
 		function setup() {
-			let numBunnies = 3000,
-				gravity = 3,
+			const numBunnies = 3000;
+			let gravity = 3,
 				bunnies = [],
-				maxX = 640,
-				minX = 0,
-				maxY = 480,
-				minY = 0,
 				img = new Image();
 
 			img.src = 'wabbit_alpha.png';
 
-			for (let i = 0; i < numBunnies; i++) {
-				const bunny = new Bunny();
-				bunny.speedX = Math.random() * 10;
-				bunny.speedY = (Math.random() * 10) - 5;
+			for (let i = 0; i < numBunnies; i++) bunnies.push(new Bunny());
 
-				bunnies.push(bunny);
-			}
-
-
-			var canvas = document.getElementById('Canvas2D');
-			var c = canvas.getContext('2d');
-
+			const canvas = document.getElementById('canvas');
+			const ctx = canvas.getContext('2d');
 
 			function render() {
-				var bunny;
+				ctx.fillStyle = bcolor;
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-				c.fillStyle = bcolor;
-				c.fillRect(0, 0, maxX, maxY);
-
-				for (i = 0; i < numBunnies; i++) {
-					bunny = bunnies[i];
+				for (let i = 0; i < numBunnies; i++) {
+					const bunny = bunnies[i];
 
 					bunny.x += bunny.speedX;
 					bunny.y += bunny.speedY;
 					bunny.speedY += gravity;
 
-					if (bunny.x > maxX) {
+					if (bunny.x > canvas.width) {
 						bunny.speedX *= -1;
-						bunny.x = maxX;
+						bunny.x = canvas.width;
 					}
-					else if (bunny.x < minX) {
+					else if (bunny.x < 0) {
 						bunny.speedX *= -1;
-						bunny.x = minX;
+						bunny.x = 0;
 					}
 
-					if (bunny.y > maxY) {
+					if (bunny.y > canvas.height) {
 						bunny.speedY *= -0.8;
-						bunny.y = maxY;
+						bunny.y = canvas.height;
 
 						if (Math.random() > 0.5) {
 							bunny.speedY -= Math.random() * 12;
 						}
 					}
-					else if (bunny.y < minY) {
+					else if (bunny.y < 0) {
 						bunny.speedY = 0;
-						bunny.y = minY;
+						bunny.y = 0;
 					}
 
 					if (snapping)
-						c.drawImage(img, (0.5 + bunny.x) | 0, (0.5 + bunny.y) | 0);
+						ctx.drawImage(img, (0.5 + bunny.x) | 0, (0.5 + bunny.y) | 0);
 					else
-						c.drawImage(img, bunny.x, bunny.y);
+						ctx.drawImage(img, bunny.x, bunny.y);
 				}
 			}
 			var loop = setInterval(function () { render(); }, 1000 / 30);
@@ -92,7 +78,6 @@
 		function toggleSnapping() {
 			snapping = document.forms[0].snappingCheckbox.checked;
 			bcolor = snapping ? "rgba(200, 200, 255, 1)" : "rgba(255, 255, 255, 1)";
-			console.log(document.forms[0].snappingCheckbox.checked, snapping, typeof snapping);
 		}
 
 		var interval = setInterval(function () {
@@ -137,12 +122,13 @@
 <body onLoad="setup();">
 	<div class="wrap">
 		<div id="stats"></div>
-		<canvas id="Canvas2D" width="640" height="480">No bunnies for you! Come back in... one year!</canvas>
-		<p>
-		<form><input type="checkbox" name="snappingCheckbox" onchange="toggleSnapping();" />
-			Check to enable pixel snapping. </p>
-			<p>Original Bunny Bench by <a href="http://blog.iainlobb.com/search?q=bunny">Iain Lobb</a>. Stats by <a
-					href="http://mrdoob.com/blog/post/700">Mr.Doob</a> )</p>
+		<canvas id="canvas" width="640" height="480">No bunnies for you! Come back in... one year!</canvas>
+		<form>
+			<p style="text-align: center;">
+				<input type="checkbox" name="snappingCheckbox" onchange="toggleSnapping();" />
+				Check to enable pixel snapping.
+			</p>
+		</form>
 	</div>
 
 </body>
