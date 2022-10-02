@@ -13,6 +13,12 @@ class ColorScheme {
   }
 }
 
+function assignStyles(element, styles) {
+  for (const styleName in styles) {
+    element.style[styleName] = styles[styleName];
+  }
+}
+
 function Stats() {
   let maxFps = 0,
     minFps = 1000;
@@ -74,51 +80,59 @@ function Stats() {
       ),
     };
   const parent = document.createElement("div");
-  parent.style.fontFamily = "Helvetica, Arial, sans-serif";
-  parent.style.textAlign = "left";
-  parent.style.fontSize = "9px";
-  parent.style.opacity = "0.9";
-  parent.style.width = "80px";
-  parent.style.cursor = "pointer";
+  assignStyles(parent, {
+    fontFamily: "Helvetica, Arial, sans-serif",
+    textAlign: "left",
+    fontSize: "9px",
+    opacity: "0.9",
+    width: "80px",
+    cursor: "pointer",
+  });
   parent.addEventListener("click", togglePanel, false);
   const fpsDiv = document.createElement("div");
-  fpsDiv.style.backgroundColor = `rgb(${Math.floor(colorSchemes.fps.bg.r / 2)},${Math.floor(
-    colorSchemes.fps.bg.g / 2
-  )},${Math.floor(colorSchemes.fps.bg.b / 2)})`;
-  fpsDiv.style.padding = "2px 0px 3px 0px";
+  assignStyles(fpsDiv, {
+    backgroundColor: `rgb(${Math.floor(colorSchemes.fps.bg.r / 2)},${Math.floor(
+      colorSchemes.fps.bg.g / 2
+    )},${Math.floor(colorSchemes.fps.bg.b / 2)})`,
+    padding: "2px 0px 3px 0px",
+  });
   parent.appendChild(fpsDiv);
   const fpsText = document.createElement("div");
   fpsText.innerHTML = "<strong>FPS</strong>";
-  fpsText.style.color = `rgb(${colorSchemes.fps.fg.r},${colorSchemes.fps.fg.g},${colorSchemes.fps.fg.b})`;
-  fpsText.style.margin = "0px 0px 1px 3px";
+  assignStyles(fpsText, {
+    color: `rgb(${colorSchemes.fps.fg.r},${colorSchemes.fps.fg.g},${colorSchemes.fps.fg.b})`,
+    margin: "0px 0px 1px 3px",
+  });
   fpsDiv.appendChild(fpsText);
   const canvas = document.createElement("canvas");
   canvas.width = 74;
   canvas.height = 30;
-  canvas.style.display = "block";
-  canvas.style.marginLeft = "3px";
+  assignStyles(canvas, { display: "block", marginLeft: "3px" });
   fpsDiv.appendChild(canvas);
   const ctx = canvas.getContext("2d");
   ctx.fillStyle = `rgb(${colorSchemes.fps.bg.r},${colorSchemes.fps.bg.g},${colorSchemes.fps.bg.b})`;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   B = ctx.getImageData(0, 0, canvas.width, canvas.height);
   const msDiv = document.createElement("div");
-  msDiv.style.backgroundColor = `rgb(${Math.floor(colorSchemes.ms.bg.r / 2)},${Math.floor(
-    colorSchemes.ms.bg.g / 2
-  )},${Math.floor(colorSchemes.ms.bg.b / 2)})`;
-  msDiv.style.padding = "2px 0px 3px 0px";
-  msDiv.style.display = "none";
+  assignStyles(msDiv, {
+    backgroundColor: `rgb(${Math.floor(colorSchemes.ms.bg.r / 2)},${Math.floor(
+      colorSchemes.ms.bg.g / 2
+    )},${Math.floor(colorSchemes.ms.bg.b / 2)})`,
+    padding: "2px 0px 3px 0px",
+    display: "none",
+  });
   parent.appendChild(msDiv);
   const msText = document.createElement("div");
   msText.innerHTML = "<strong>MS</strong>";
-  msText.style.color = `rgb(${colorSchemes.ms.fg.r},${colorSchemes.ms.fg.g},${colorSchemes.ms.fg.b})`;
-  msText.style.margin = "0px 0px 1px 3px";
+  assignStyles(fpsText, {
+    color: `rgb(${colorSchemes.ms.fg.r},${colorSchemes.ms.fg.g},${colorSchemes.ms.fg.b})`,
+    margin: "0px 0px 1px 3px",
+  });
   msDiv.appendChild(msText);
   p = document.createElement("canvas");
   p.width = 74;
   p.height = 30;
-  p.style.display = "block";
-  p.style.marginLeft = "3px";
+  assignStyles(p, { display: "block", marginLeft: "3px" });
   msDiv.appendChild(p);
   D = p.getContext("2d");
   D.fillStyle = `rgb(${colorSchemes.ms.bg.r},${colorSchemes.ms.bg.g},${colorSchemes.ms.bg.b})`;
@@ -142,8 +156,7 @@ function Stats() {
   z = document.createElement("canvas");
   z.width = 74;
   z.height = 30;
-  z.style.display = "block";
-  z.style.marginLeft = "3px";
+  assignStyles(z, { display: "block", marginLeft: "3px" });
   memDiv.appendChild(z);
   g = z.getContext("2d");
   g.fillStyle = "#301010";
