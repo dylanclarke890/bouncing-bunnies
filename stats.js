@@ -73,12 +73,28 @@ function Stats() {
       }
     ),
   };
-  var currentPanelIndex = 0,
-    maxPanels = 2,
-    C = 0,
-    now = Date.now(),
-    w = now,
-    lastFrame = now;
+  let currentPanelIndex = 0,
+    maxPanels = 2;
+  function togglePanel() {
+    currentPanelIndex++;
+    currentPanelIndex = currentPanelIndex == maxPanels ? 0 : currentPanelIndex;
+    fpsDiv.style.display = "none";
+    msDiv.style.display = "none";
+    memDiv.style.display = "none";
+    switch (currentPanelIndex) {
+      case 0:
+        fpsDiv.style.display = "block";
+        break;
+      case 1:
+        msDiv.style.display = "block";
+        break;
+      case 2:
+        memDiv.style.display = "block";
+        break;
+      default:
+        break;
+    }
+  }
 
   const parent = document.createElement("div");
   assignStyles(parent, {
@@ -154,19 +170,18 @@ function Stats() {
 
   const [memCtx, memData] = newCanvas(memDiv, colorSchemes.mem.bg);
 
-  function drawPanelData(data, M, colorScheme) {
-    let L;
-    for (let i = 0; i < 30; i++) {
+  function drawPanelData(data, minVal, colorScheme) {
+    for (let i = 0; i < 30; i++)
       for (let j = 0; j < 73; j++) {
-        L = (j + i * 74) * 4;
+        const L = (j + i * 74) * 4;
         data[L] = data[L + 4];
         data[L + 1] = data[L + 5];
         data[L + 2] = data[L + 6];
       }
-    }
+
     for (let i = 0; i < 30; i++) {
-      L = (73 + i * 74) * 4;
-      if (i < M) {
+      const L = (73 + i * 74) * 4;
+      if (i < minVal) {
         data[L] = colorScheme.bg.r;
         data[L + 1] = colorScheme.bg.g;
         data[L + 2] = colorScheme.bg.b;
@@ -177,26 +192,6 @@ function Stats() {
       }
     }
   }
-  function togglePanel() {
-    currentPanelIndex++;
-    currentPanelIndex = currentPanelIndex == maxPanels ? 0 : currentPanelIndex;
-    fpsDiv.style.display = "none";
-    msDiv.style.display = "none";
-    memDiv.style.display = "none";
-    switch (currentPanelIndex) {
-      case 0:
-        fpsDiv.style.display = "block";
-        break;
-      case 1:
-        msDiv.style.display = "block";
-        break;
-      case 2:
-        memDiv.style.display = "block";
-        break;
-      default:
-        break;
-    }
-  }
 
   let minFps = 1000,
     maxFps = 0,
@@ -205,20 +200,25 @@ function Stats() {
     minMem = 1000,
     maxMem = 0;
 
+  let framesThisSec = 0,
+    now = Date.now(),
+    last = now,
+    lastFrame = now;
+
   return {
     domElement: parent,
     update: function () {
-      C++;
+      framesThisSec++;
       now = Date.now();
-      const ms = now - w;
+      const ms = now - last;
       minMs = Math.min(minMs, ms);
       maxMs = Math.max(maxMs, ms);
       drawPanelData(msData.data, Math.min(30, 30 - (ms / 200) * 30), colorSchemes.ms);
       msText.innerHTML = `<strong>${ms} MS</strong>(${minMs}-${maxMs})`;
       msCtx.putImageData(msData, 0, 0);
-      w = now;
+      last = now;
       if (now > lastFrame + 1000) {
-        const fps = Math.round((C * 1000) / (now - lastFrame));
+        const fps = Math.round((framesThisSec * 1000) / (now - lastFrame));
         minFps = Math.min(minFps, fps);
         maxFps = Math.max(maxFps, fps);
         drawPanelData(fpsData.data, Math.min(30, 30 - (fps / 100) * 30), colorSchemes.fps);
@@ -235,7 +235,7 @@ function Stats() {
           memCtx.putImageData(memData, 0, 0);
         }
         lastFrame = now;
-        C = 0;
+        framesThisSec = 0;
       }
     },
   };
