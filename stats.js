@@ -74,25 +74,11 @@ class Stats {
     parent.addEventListener("click", this.nextPanel, false);
 
     const fpsDiv = this.newPanelContainer("fps", "block", parent);
-    const fpsText = document.createElement("div");
-    fpsText.innerHTML = "<strong>FPS</strong>";
-    assignStyles(fpsText, {
-      color: `rgb(${this.colorSchemes.fps.fg.r},${this.colorSchemes.fps.fg.g},${this.colorSchemes.fps.fg.b})`,
-      margin: "0px 0px 1px 3px",
-    });
-    fpsDiv.appendChild(fpsText);
-
+    const fpsText = this.newPanelText("fps", fpsDiv);
     const [fpsCtx, fpsData] = this.newPanelCanvas(fpsDiv, this.colorSchemes.fps.bg);
 
     const msDiv = this.newPanelContainer("ms", "none", parent);
-    const msText = document.createElement("div");
-    msText.innerHTML = "<strong>MS</strong>";
-    assignStyles(fpsText, {
-      color: `rgb(${this.colorSchemes.ms.fg.r},${this.colorSchemes.ms.fg.g},${this.colorSchemes.ms.fg.b})`,
-      margin: "0px 0px 1px 3px",
-    });
-    msDiv.appendChild(msText);
-
+    const msText = this.newPanelText("ms", msDiv);
     const [msCtx, msData] = this.newPanelCanvas(msDiv, this.colorSchemes.ms.bg);
 
     try {
@@ -100,15 +86,11 @@ class Stats {
     } catch (ex) {}
 
     const memDiv = this.newPanelContainer("mem", "none", parent);
-    const memText = document.createElement("div");
-    memText.innerHTML = "<strong>MEM</strong>";
-    assignStyles(memText, {
-      color: `rgb(${this.colorSchemes.mem.fg.r},${this.colorSchemes.mem.fg.g},${this.colorSchemes.mem.fg.b}`,
-      margin: "0px 0px 1px 3px",
-    });
-    memDiv.appendChild(memText);
-
+    const memText = this.newPanelText("mem", memDiv);
     const [memCtx, memData] = this.newPanelCanvas(memDiv, this.colorSchemes.mem.bg);
+
+    if (settings.domElementStyles) assignStyles(parent, settings.domElementStyles);
+    if (settings.appendTo) settings.appendTo.appendChild(parent);
 
     function drawPanelData(data, minVal, colorScheme) {
       for (let i = 0; i < 30; i++)
@@ -144,9 +126,6 @@ class Stats {
       now = Date.now(),
       last = now,
       lastFrame = now;
-
-    if (settings.domElementStyles) assignStyles(parent, settings.domElementStyles);
-    if (settings.appendTo) settings.appendTo.appendChild(parent);
 
     this.domElement = parent;
     this.update = function () {
