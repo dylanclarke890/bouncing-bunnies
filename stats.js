@@ -213,7 +213,7 @@ var Stats = function () {
       G = Math.min(G, k);
       a = Math.max(a, k);
       I(l.data, Math.min(30, 30 - (k / 200) * 30), "ms");
-      msText.innerHTML = "<strong>" + k + " MS</strong> (" + G + "-" + a + ")";
+      msText.innerHTML = `<strong>${k} MS</strong>(${G}-${a})`;
       D.putImageData(l, 0, 0);
       w = E;
       if (E > f + 1000) {
@@ -228,14 +228,7 @@ var Stats = function () {
           o = Math.min(o, v);
           s = Math.max(s, v);
           I(b.data, Math.min(30, 30 - v / 2), "mem");
-          n.innerHTML =
-            "<strong>" +
-            Math.round(v) +
-            " MEM</strong> (" +
-            Math.round(o) +
-            "-" +
-            Math.round(s) +
-            ")";
+          n.innerHTML = `<strong>${Math.round(v)} MEM</strong> (${Math.round(o)}-${Math.round(s)})`;
           g.putImageData(b, 0, 0);
         }
         f = E;
