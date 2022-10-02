@@ -19,6 +19,21 @@ function assignStyles(element, styles) {
   }
 }
 
+function newCanvas(appendTo, bgColor) {
+  const canv = document.createElement("canvas");
+  canv.width = 74;
+  canv.height = 30;
+  assignStyles(canv, { display: "block", marginLeft: "3px" });
+  appendTo.appendChild(canv);
+
+  const ctx = canv.getContext("2d");
+  ctx.fillStyle = `rgb(${bgColor.r},${bgColor.g},${bgColor.b})`;
+  ctx.fillRect(0, 0, canv.width, canv.height);
+  const data = ctx.getImageData(0, 0, canv.width, canv.height);
+
+  return [ctx, data];
+}
+
 function Stats() {
   let maxFps = 0,
     minFps = 1000;
@@ -101,16 +116,7 @@ function Stats() {
   });
   fpsDiv.appendChild(fpsText);
 
-  const fpsCanv = document.createElement("canvas");
-  fpsCanv.width = 74;
-  fpsCanv.height = 30;
-  assignStyles(fpsCanv, { display: "block", marginLeft: "3px" });
-  fpsDiv.appendChild(fpsCanv);
-
-  const fpsCtx = fpsCanv.getContext("2d");
-  fpsCtx.fillStyle = `rgb(${colorSchemes.fps.bg.r},${colorSchemes.fps.bg.g},${colorSchemes.fps.bg.b})`;
-  fpsCtx.fillRect(0, 0, fpsCanv.width, fpsCanv.height);
-  const fpsData = fpsCtx.getImageData(0, 0, fpsCanv.width, fpsCanv.height);
+  const [fpsCtx, fpsData] = newCanvas(fpsDiv, colorSchemes.fps.bg);
 
   const msDiv = document.createElement("div");
   assignStyles(msDiv, {
@@ -130,16 +136,7 @@ function Stats() {
   });
   msDiv.appendChild(msText);
 
-  const msCanv = document.createElement("canvas");
-  msCanv.width = 74;
-  msCanv.height = 30;
-  assignStyles(msCanv, { display: "block", marginLeft: "3px" });
-  msDiv.appendChild(msCanv);
-
-  const msCtx = msCanv.getContext("2d");
-  msCtx.fillStyle = `rgb(${colorSchemes.ms.bg.r},${colorSchemes.ms.bg.g},${colorSchemes.ms.bg.b})`;
-  msCtx.fillRect(0, 0, msCanv.width, msCanv.height);
-  const msData = msCtx.getImageData(0, 0, msCanv.width, msCanv.height);
+  const [msCtx, msData] = newCanvas(msDiv, colorSchemes.ms.bg);
 
   try {
     if (webkitPerformance && webkitPerformance.memory.totalJSHeapSize) panels = 3;
@@ -163,16 +160,7 @@ function Stats() {
   });
   memDiv.appendChild(memText);
 
-  const memCanv = document.createElement("canvas");
-  memCanv.width = 74;
-  memCanv.height = 30;
-  assignStyles(memCanv, { display: "block", marginLeft: "3px" });
-  memDiv.appendChild(memCanv);
-
-  const memCtx = memCanv.getContext("2d");
-  memCtx.fillStyle = "#301010";
-  memCtx.fillRect(0, 0, memCanv.width, memCanv.height);
-  const memData = memCtx.getImageData(0, 0, memCanv.width, memCanv.height);
+  const [memCtx, memData] = newCanvas(memDiv, colorSchemes.mem.bg);
 
   function I(N, M, K) {
     let L;
