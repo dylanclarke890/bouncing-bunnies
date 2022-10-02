@@ -16,8 +16,8 @@ class ColorScheme {
 function Stats() {
   let maxFps = 0,
     minFps = 1000;
-  var j = 0,
-    slides = 2,
+  var currentPanelIndex = 0,
+    panels = 2,
     C = 0,
     E = Date.now(),
     w = E,
@@ -80,7 +80,7 @@ function Stats() {
   parent.style.opacity = "0.9";
   parent.style.width = "80px";
   parent.style.cursor = "pointer";
-  parent.addEventListener("click", H, false);
+  parent.addEventListener("click", togglePanel, false);
   const fpsDiv = document.createElement("div");
   fpsDiv.style.backgroundColor = `rgb(${Math.floor(colorSchemes.fps.bg.r / 2)},${Math.floor(
     colorSchemes.fps.bg.g / 2
@@ -103,14 +103,9 @@ function Stats() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   B = ctx.getImageData(0, 0, canvas.width, canvas.height);
   const msDiv = document.createElement("div");
-  msDiv.style.backgroundColor =
-    "rgb(" +
-    Math.floor(colorSchemes.ms.bg.r / 2) +
-    "," +
-    Math.floor(colorSchemes.ms.bg.g / 2) +
-    "," +
-    Math.floor(colorSchemes.ms.bg.b / 2) +
-    ")";
+  msDiv.style.backgroundColor = `rgb(${Math.floor(colorSchemes.ms.bg.r / 2)},${Math.floor(
+    colorSchemes.ms.bg.g / 2
+  )},${Math.floor(colorSchemes.ms.bg.b / 2)})`;
   msDiv.style.padding = "2px 0px 3px 0px";
   msDiv.style.display = "none";
   parent.appendChild(msDiv);
@@ -130,10 +125,8 @@ function Stats() {
   D.fillRect(0, 0, p.width, p.height);
   l = D.getImageData(0, 0, p.width, p.height);
   try {
-    if (webkitPerformance && webkitPerformance.memory.totalJSHeapSize) {
-      slides = 3;
-    }
-  } catch (x) {}
+    if (webkitPerformance && webkitPerformance.memory.totalJSHeapSize) panels = 3;
+  } catch (ex) {}
   const memDiv = document.createElement("div");
   memDiv.style.backgroundColor = `rgb(${Math.floor(colorSchemes.mem.bg.r / 2)}, ${Math.floor(
     colorSchemes.mem.bg.g / 2
@@ -179,13 +172,13 @@ function Stats() {
       }
     }
   }
-  function H() {
-    j++;
-    j = j == slides ? 0 : j;
+  function togglePanel() {
+    currentPanelIndex++;
+    currentPanelIndex = currentPanelIndex == panels ? 0 : currentPanelIndex;
     fpsDiv.style.display = "none";
     msDiv.style.display = "none";
     memDiv.style.display = "none";
-    switch (j) {
+    switch (currentPanelIndex) {
       case 0:
         fpsDiv.style.display = "block";
         break;
@@ -194,6 +187,8 @@ function Stats() {
         break;
       case 2:
         memDiv.style.display = "block";
+        break;
+      default:
         break;
     }
   }
@@ -216,7 +211,7 @@ function Stats() {
         I(B.data, Math.min(30, 30 - (fps / 100) * 30), "fps");
         fpsText.innerHTML = `<strong>${fps} FPS</strong> (${minFps}-${maxFps})`;
         ctx.putImageData(B, 0, 0);
-        if (slides == 3) {
+        if (panels == 3) {
           v = webkitPerformance.memory.usedJSHeapSize * 9.54e-7;
           o = Math.min(o, v);
           s = Math.max(s, v);
