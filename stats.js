@@ -35,58 +35,50 @@ function newCanvas(appendTo, bgColor) {
 }
 
 function Stats() {
-  let maxFps = 0,
-    minFps = 1000;
+  const colorSchemes = {
+    fps: new ColorScheme(
+      {
+        r: 16,
+        g: 16,
+        b: 48,
+      },
+      {
+        r: 0,
+        g: 255,
+        b: 255,
+      }
+    ),
+    ms: new ColorScheme(
+      {
+        r: 16,
+        g: 48,
+        b: 16,
+      },
+      {
+        r: 0,
+        g: 255,
+        b: 0,
+      }
+    ),
+    mem: new ColorScheme(
+      {
+        r: 48,
+        g: 16,
+        b: 26,
+      },
+      {
+        r: 255,
+        g: 0,
+        b: 128,
+      }
+    ),
+  };
   var currentPanelIndex = 0,
-    panels = 2,
+    maxPanels = 2,
     C = 0,
-    E = Date.now(),
-    w = E,
-    f = E,
-    k = 0,
-    G = 1000,
-    a = 0,
-    v = 0,
-    o = 1000,
-    s = 0,
-    colorSchemes = {
-      fps: new ColorScheme(
-        {
-          r: 16,
-          g: 16,
-          b: 48,
-        },
-        {
-          r: 0,
-          g: 255,
-          b: 255,
-        }
-      ),
-      ms: new ColorScheme(
-        {
-          r: 16,
-          g: 48,
-          b: 16,
-        },
-        {
-          r: 0,
-          g: 255,
-          b: 0,
-        }
-      ),
-      mem: new ColorScheme(
-        {
-          r: 48,
-          g: 16,
-          b: 26,
-        },
-        {
-          r: 255,
-          g: 0,
-          b: 128,
-        }
-      ),
-    };
+    now = Date.now(),
+    w = now,
+    lastFrame = now;
 
   const parent = document.createElement("div");
   assignStyles(parent, {
@@ -139,7 +131,7 @@ function Stats() {
   const [msCtx, msData] = newCanvas(msDiv, colorSchemes.ms.bg);
 
   try {
-    if (webkitPerformance && webkitPerformance.memory.totalJSHeapSize) panels = 3;
+    if (webkitPerformance && webkitPerformance.memory.totalJSHeapSize) maxPanels = 3;
   } catch (ex) {}
 
   const memDiv = document.createElement("div");
@@ -162,32 +154,32 @@ function Stats() {
 
   const [memCtx, memData] = newCanvas(memDiv, colorSchemes.mem.bg);
 
-  function I(N, M, K) {
+  function drawPanelData(data, M, colorScheme) {
     let L;
     for (let i = 0; i < 30; i++) {
       for (let j = 0; j < 73; j++) {
         L = (j + i * 74) * 4;
-        N[L] = N[L + 4];
-        N[L + 1] = N[L + 5];
-        N[L + 2] = N[L + 6];
+        data[L] = data[L + 4];
+        data[L + 1] = data[L + 5];
+        data[L + 2] = data[L + 6];
       }
     }
     for (let i = 0; i < 30; i++) {
       L = (73 + i * 74) * 4;
       if (i < M) {
-        N[L] = colorSchemes[K].bg.r;
-        N[L + 1] = colorSchemes[K].bg.g;
-        N[L + 2] = colorSchemes[K].bg.b;
+        data[L] = colorScheme.bg.r;
+        data[L + 1] = colorScheme.bg.g;
+        data[L + 2] = colorScheme.bg.b;
       } else {
-        N[L] = colorSchemes[K].fg.r;
-        N[L + 1] = colorSchemes[K].fg.g;
-        N[L + 2] = colorSchemes[K].fg.b;
+        data[L] = colorScheme.fg.r;
+        data[L + 1] = colorScheme.fg.g;
+        data[L + 2] = colorScheme.fg.b;
       }
     }
   }
   function togglePanel() {
     currentPanelIndex++;
-    currentPanelIndex = currentPanelIndex == panels ? 0 : currentPanelIndex;
+    currentPanelIndex = currentPanelIndex == maxPanels ? 0 : currentPanelIndex;
     fpsDiv.style.display = "none";
     msDiv.style.display = "none";
     memDiv.style.display = "none";
@@ -205,36 +197,44 @@ function Stats() {
         break;
     }
   }
+
+  let minFps = 1000,
+    maxFps = 0,
+    minMs = 1000,
+    maxMs = 0,
+    minMem = 1000,
+    maxMem = 0;
+
   return {
     domElement: parent,
     update: function () {
       C++;
-      E = Date.now();
-      k = E - w;
-      G = Math.min(G, k);
-      a = Math.max(a, k);
-      I(msData.data, Math.min(30, 30 - (k / 200) * 30), "ms");
-      msText.innerHTML = `<strong>${k} MS</strong>(${G}-${a})`;
+      now = Date.now();
+      const ms = now - w;
+      minMs = Math.min(minMs, ms);
+      maxMs = Math.max(maxMs, ms);
+      drawPanelData(msData.data, Math.min(30, 30 - (ms / 200) * 30), colorSchemes.ms);
+      msText.innerHTML = `<strong>${ms} MS</strong>(${minMs}-${maxMs})`;
       msCtx.putImageData(msData, 0, 0);
-      w = E;
-      if (E > f + 1000) {
-        const fps = Math.round((C * 1000) / (E - f));
+      w = now;
+      if (now > lastFrame + 1000) {
+        const fps = Math.round((C * 1000) / (now - lastFrame));
         minFps = Math.min(minFps, fps);
         maxFps = Math.max(maxFps, fps);
-        I(fpsData.data, Math.min(30, 30 - (fps / 100) * 30), "fps");
+        drawPanelData(fpsData.data, Math.min(30, 30 - (fps / 100) * 30), colorSchemes.fps);
         fpsText.innerHTML = `<strong>${fps} FPS</strong> (${minFps}-${maxFps})`;
         fpsCtx.putImageData(fpsData, 0, 0);
-        if (panels == 3) {
-          v = webkitPerformance.memory.usedJSHeapSize * 9.54e-7;
-          o = Math.min(o, v);
-          s = Math.max(s, v);
-          I(memData.data, Math.min(30, 30 - v / 2), "mem");
-          memText.innerHTML = `<strong>${Math.round(v)} MEM</strong> (${Math.round(o)}-${Math.round(
-            s
-          )})`;
+        if (maxPanels === 3) {
+          const mem = webkitPerformance.memory.usedJSHeapSize * 9.54e-7;
+          minMem = Math.min(minMem, mem);
+          maxMem = Math.max(maxMem, mem);
+          drawPanelData(memData.data, Math.min(30, 30 - mem / 2), colorSchemes.mem);
+          memText.innerHTML = `<strong>${Math.round(mem)} MEM</strong> (${Math.round(
+            minMem
+          )}-${Math.round(maxMem)})`;
           memCtx.putImageData(memData, 0, 0);
         }
-        f = E;
+        lastFrame = now;
         C = 0;
       }
     },
