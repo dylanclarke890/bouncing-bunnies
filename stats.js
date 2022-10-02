@@ -34,180 +34,180 @@ function newCanvas(appendTo, bgColor) {
   return [ctx, data];
 }
 
-function Stats() {
-  const colorSchemes = {
-    fps: new ColorScheme(
-      {
-        r: 16,
-        g: 16,
-        b: 48,
-      },
-      {
-        r: 0,
-        g: 255,
-        b: 255,
-      }
-    ),
-    ms: new ColorScheme(
-      {
-        r: 16,
-        g: 48,
-        b: 16,
-      },
-      {
-        r: 0,
-        g: 255,
-        b: 0,
-      }
-    ),
-    mem: new ColorScheme(
-      {
-        r: 48,
-        g: 16,
-        b: 26,
-      },
-      {
-        r: 255,
-        g: 0,
-        b: 128,
-      }
-    ),
-  };
-  let currentPanelIndex = 0,
-    maxPanels = 2;
-  function togglePanel() {
-    currentPanelIndex++;
-    currentPanelIndex = currentPanelIndex == maxPanels ? 0 : currentPanelIndex;
-    fpsDiv.style.display = "none";
-    msDiv.style.display = "none";
-    memDiv.style.display = "none";
-    switch (currentPanelIndex) {
-      case 0:
-        fpsDiv.style.display = "block";
-        break;
-      case 1:
-        msDiv.style.display = "block";
-        break;
-      case 2:
-        memDiv.style.display = "block";
-        break;
-      default:
-        break;
-    }
-  }
-
-  const parent = document.createElement("div");
-  assignStyles(parent, {
-    fontFamily: "Helvetica, Arial, sans-serif",
-    textAlign: "left",
-    fontSize: "9px",
-    opacity: "0.9",
-    width: "80px",
-    cursor: "pointer",
-  });
-  parent.addEventListener("click", togglePanel, false);
-
-  const fpsDiv = document.createElement("div");
-  assignStyles(fpsDiv, {
-    backgroundColor: `rgb(${Math.floor(colorSchemes.fps.bg.r / 2)},${Math.floor(
-      colorSchemes.fps.bg.g / 2
-    )},${Math.floor(colorSchemes.fps.bg.b / 2)})`,
-    padding: "2px 0px 3px 0px",
-  });
-  parent.appendChild(fpsDiv);
-
-  const fpsText = document.createElement("div");
-  fpsText.innerHTML = "<strong>FPS</strong>";
-  assignStyles(fpsText, {
-    color: `rgb(${colorSchemes.fps.fg.r},${colorSchemes.fps.fg.g},${colorSchemes.fps.fg.b})`,
-    margin: "0px 0px 1px 3px",
-  });
-  fpsDiv.appendChild(fpsText);
-
-  const [fpsCtx, fpsData] = newCanvas(fpsDiv, colorSchemes.fps.bg);
-
-  const msDiv = document.createElement("div");
-  assignStyles(msDiv, {
-    backgroundColor: `rgb(${Math.floor(colorSchemes.ms.bg.r / 2)},${Math.floor(
-      colorSchemes.ms.bg.g / 2
-    )},${Math.floor(colorSchemes.ms.bg.b / 2)})`,
-    padding: "2px 0px 3px 0px",
-    display: "none",
-  });
-  parent.appendChild(msDiv);
-
-  const msText = document.createElement("div");
-  msText.innerHTML = "<strong>MS</strong>";
-  assignStyles(fpsText, {
-    color: `rgb(${colorSchemes.ms.fg.r},${colorSchemes.ms.fg.g},${colorSchemes.ms.fg.b})`,
-    margin: "0px 0px 1px 3px",
-  });
-  msDiv.appendChild(msText);
-
-  const [msCtx, msData] = newCanvas(msDiv, colorSchemes.ms.bg);
-
-  try {
-    if (webkitPerformance && webkitPerformance.memory.totalJSHeapSize) maxPanels = 3;
-  } catch (ex) {}
-
-  const memDiv = document.createElement("div");
-  assignStyles(memDiv, {
-    backgroundColor: `rgb(${Math.floor(colorSchemes.mem.bg.r / 2)}, ${Math.floor(
-      colorSchemes.mem.bg.g / 2
-    )}, ${Math.floor(colorSchemes.mem.bg.b / 2)})`,
-    padding: "2px 0px 3px 0px",
-    display: "none",
-  });
-  parent.appendChild(memDiv);
-
-  const memText = document.createElement("div");
-  memText.innerHTML = "<strong>MEM</strong>";
-  assignStyles(memText, {
-    color: `rgb(${colorSchemes.mem.fg.r},${colorSchemes.mem.fg.g},${colorSchemes.mem.fg.b}`,
-    margin: "0px 0px 1px 3px",
-  });
-  memDiv.appendChild(memText);
-
-  const [memCtx, memData] = newCanvas(memDiv, colorSchemes.mem.bg);
-
-  function drawPanelData(data, minVal, colorScheme) {
-    for (let i = 0; i < 30; i++)
-      for (let j = 0; j < 73; j++) {
-        const L = (j + i * 74) * 4;
-        data[L] = data[L + 4];
-        data[L + 1] = data[L + 5];
-        data[L + 2] = data[L + 6];
-      }
-
-    for (let i = 0; i < 30; i++) {
-      const L = (73 + i * 74) * 4;
-      if (i < minVal) {
-        data[L] = colorScheme.bg.r;
-        data[L + 1] = colorScheme.bg.g;
-        data[L + 2] = colorScheme.bg.b;
-      } else {
-        data[L] = colorScheme.fg.r;
-        data[L + 1] = colorScheme.fg.g;
-        data[L + 2] = colorScheme.fg.b;
+class Stats {
+  constructor() {
+    const colorSchemes = {
+      fps: new ColorScheme(
+        {
+          r: 16,
+          g: 16,
+          b: 48,
+        },
+        {
+          r: 0,
+          g: 255,
+          b: 255,
+        }
+      ),
+      ms: new ColorScheme(
+        {
+          r: 16,
+          g: 48,
+          b: 16,
+        },
+        {
+          r: 0,
+          g: 255,
+          b: 0,
+        }
+      ),
+      mem: new ColorScheme(
+        {
+          r: 48,
+          g: 16,
+          b: 26,
+        },
+        {
+          r: 255,
+          g: 0,
+          b: 128,
+        }
+      ),
+    };
+    let currentPanelIndex = 0,
+      maxPanels = 2;
+    function togglePanel() {
+      currentPanelIndex++;
+      currentPanelIndex = currentPanelIndex == maxPanels ? 0 : currentPanelIndex;
+      fpsDiv.style.display = "none";
+      msDiv.style.display = "none";
+      memDiv.style.display = "none";
+      switch (currentPanelIndex) {
+        case 0:
+          fpsDiv.style.display = "block";
+          break;
+        case 1:
+          msDiv.style.display = "block";
+          break;
+        case 2:
+          memDiv.style.display = "block";
+          break;
+        default:
+          break;
       }
     }
-  }
 
-  let minFps = 1000,
-    maxFps = 0,
-    minMs = 1000,
-    maxMs = 0,
-    minMem = 1000,
-    maxMem = 0;
+    const parent = document.createElement("div");
+    assignStyles(parent, {
+      fontFamily: "Helvetica, Arial, sans-serif",
+      textAlign: "left",
+      fontSize: "9px",
+      opacity: "0.9",
+      width: "80px",
+      cursor: "pointer",
+    });
+    parent.addEventListener("click", togglePanel, false);
 
-  let framesThisSec = 0,
-    now = Date.now(),
-    last = now,
-    lastFrame = now;
+    const fpsDiv = document.createElement("div");
+    assignStyles(fpsDiv, {
+      backgroundColor: `rgb(${Math.floor(colorSchemes.fps.bg.r / 2)},${Math.floor(
+        colorSchemes.fps.bg.g / 2
+      )},${Math.floor(colorSchemes.fps.bg.b / 2)})`,
+      padding: "2px 0px 3px 0px",
+    });
+    parent.appendChild(fpsDiv);
 
-  return {
-    domElement: parent,
-    update: function () {
+    const fpsText = document.createElement("div");
+    fpsText.innerHTML = "<strong>FPS</strong>";
+    assignStyles(fpsText, {
+      color: `rgb(${colorSchemes.fps.fg.r},${colorSchemes.fps.fg.g},${colorSchemes.fps.fg.b})`,
+      margin: "0px 0px 1px 3px",
+    });
+    fpsDiv.appendChild(fpsText);
+
+    const [fpsCtx, fpsData] = newCanvas(fpsDiv, colorSchemes.fps.bg);
+
+    const msDiv = document.createElement("div");
+    assignStyles(msDiv, {
+      backgroundColor: `rgb(${Math.floor(colorSchemes.ms.bg.r / 2)},${Math.floor(
+        colorSchemes.ms.bg.g / 2
+      )},${Math.floor(colorSchemes.ms.bg.b / 2)})`,
+      padding: "2px 0px 3px 0px",
+      display: "none",
+    });
+    parent.appendChild(msDiv);
+
+    const msText = document.createElement("div");
+    msText.innerHTML = "<strong>MS</strong>";
+    assignStyles(fpsText, {
+      color: `rgb(${colorSchemes.ms.fg.r},${colorSchemes.ms.fg.g},${colorSchemes.ms.fg.b})`,
+      margin: "0px 0px 1px 3px",
+    });
+    msDiv.appendChild(msText);
+
+    const [msCtx, msData] = newCanvas(msDiv, colorSchemes.ms.bg);
+
+    try {
+      if (webkitPerformance && webkitPerformance.memory.totalJSHeapSize) maxPanels = 3;
+    } catch (ex) {}
+
+    const memDiv = document.createElement("div");
+    assignStyles(memDiv, {
+      backgroundColor: `rgb(${Math.floor(colorSchemes.mem.bg.r / 2)}, ${Math.floor(
+        colorSchemes.mem.bg.g / 2
+      )}, ${Math.floor(colorSchemes.mem.bg.b / 2)})`,
+      padding: "2px 0px 3px 0px",
+      display: "none",
+    });
+    parent.appendChild(memDiv);
+
+    const memText = document.createElement("div");
+    memText.innerHTML = "<strong>MEM</strong>";
+    assignStyles(memText, {
+      color: `rgb(${colorSchemes.mem.fg.r},${colorSchemes.mem.fg.g},${colorSchemes.mem.fg.b}`,
+      margin: "0px 0px 1px 3px",
+    });
+    memDiv.appendChild(memText);
+
+    const [memCtx, memData] = newCanvas(memDiv, colorSchemes.mem.bg);
+
+    function drawPanelData(data, minVal, colorScheme) {
+      for (let i = 0; i < 30; i++)
+        for (let j = 0; j < 73; j++) {
+          const L = (j + i * 74) * 4;
+          data[L] = data[L + 4];
+          data[L + 1] = data[L + 5];
+          data[L + 2] = data[L + 6];
+        }
+
+      for (let i = 0; i < 30; i++) {
+        const L = (73 + i * 74) * 4;
+        if (i < minVal) {
+          data[L] = colorScheme.bg.r;
+          data[L + 1] = colorScheme.bg.g;
+          data[L + 2] = colorScheme.bg.b;
+        } else {
+          data[L] = colorScheme.fg.r;
+          data[L + 1] = colorScheme.fg.g;
+          data[L + 2] = colorScheme.fg.b;
+        }
+      }
+    }
+
+    let minFps = 1000,
+      maxFps = 0,
+      minMs = 1000,
+      maxMs = 0,
+      minMem = 1000,
+      maxMem = 0;
+
+    let framesThisSec = 0,
+      now = Date.now(),
+      last = now,
+      lastFrame = now;
+
+    this.domElement = parent;
+    this.update = function () {
       framesThisSec++;
       now = Date.now();
       const ms = now - last;
@@ -237,6 +237,6 @@ function Stats() {
         lastFrame = now;
         framesThisSec = 0;
       }
-    },
-  };
+    };
+  }
 }
