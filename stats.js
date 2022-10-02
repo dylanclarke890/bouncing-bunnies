@@ -146,17 +146,21 @@ function Stats() {
   } catch (ex) {}
 
   const memDiv = document.createElement("div");
-  memDiv.style.backgroundColor = `rgb(${Math.floor(colorSchemes.mem.bg.r / 2)}, ${Math.floor(
-    colorSchemes.mem.bg.g / 2
-  )}, ${Math.floor(colorSchemes.mem.bg.b / 2)})`;
-  memDiv.style.padding = "2px 0px 3px 0px";
-  memDiv.style.display = "none";
+  assignStyles(memDiv, {
+    backgroundColor: `rgb(${Math.floor(colorSchemes.mem.bg.r / 2)}, ${Math.floor(
+      colorSchemes.mem.bg.g / 2
+    )}, ${Math.floor(colorSchemes.mem.bg.b / 2)})`,
+    padding: "2px 0px 3px 0px",
+    display: "none",
+  });
   parent.appendChild(memDiv);
 
   const memText = document.createElement("div");
   memText.innerHTML = "<strong>MEM</strong>";
-  memText.style.color = `rgb(${colorSchemes.mem.fg.r},${colorSchemes.mem.fg.g},${colorSchemes.mem.fg.b}`;
-  memText.style.margin = "0px 0px 1px 3px";
+  assignStyles(memText, {
+    color: `rgb(${colorSchemes.mem.fg.r},${colorSchemes.mem.fg.g},${colorSchemes.mem.fg.b}`,
+    margin: "0px 0px 1px 3px",
+  });
   memDiv.appendChild(memText);
 
   const memCanv = document.createElement("canvas");
