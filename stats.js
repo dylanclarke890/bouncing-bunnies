@@ -73,21 +73,21 @@ class Stats {
     });
     parent.addEventListener("click", this.nextPanel, false);
 
-    const fpsDiv = this.newPanelContainer("fps", "block", parent);
-    const fpsText = this.newPanelText("fps", fpsDiv);
-    const [fpsCtx, fpsData] = this.newPanelCanvas(fpsDiv, this.colorSchemes.fps.bg);
+    const fpsDiv = this.panelContainer("fps", "block", parent);
+    const fpsText = this.panelText("fps", fpsDiv);
+    const [fpsCtx, fpsData] = this.panelCanvas(fpsDiv, this.colorSchemes.fps.bg);
 
-    const msDiv = this.newPanelContainer("ms", "none", parent);
-    const msText = this.newPanelText("ms", msDiv);
-    const [msCtx, msData] = this.newPanelCanvas(msDiv, this.colorSchemes.ms.bg);
+    const msDiv = this.panelContainer("ms", "none", parent);
+    const msText = this.panelText("ms", msDiv);
+    const [msCtx, msData] = this.panelCanvas(msDiv, this.colorSchemes.ms.bg);
 
     try {
       if (webkitPerformance && webkitPerformance.memory.totalJSHeapSize) this.maxPanels = 3;
     } catch (ex) {}
 
-    const memDiv = this.newPanelContainer("mem", "none", parent);
-    const memText = this.newPanelText("mem", memDiv);
-    const [memCtx, memData] = this.newPanelCanvas(memDiv, this.colorSchemes.mem.bg);
+    const memDiv = this.panelContainer("mem", "none", parent);
+    const memText = this.panelText("mem", memDiv);
+    const [memCtx, memData] = this.panelCanvas(memDiv, this.colorSchemes.mem.bg);
 
     if (settings.domElementStyles) assignStyles(parent, settings.domElementStyles);
     if (settings.appendTo) settings.appendTo.appendChild(parent);
@@ -161,7 +161,7 @@ class Stats {
     };
   }
 
-  newPanelContainer = (panelColor, display, appendTo) => {
+  panelContainer = (panelColor, display, appendTo) => {
     const div = document.createElement("div");
     assignStyles(div, {
       backgroundColor: `rgb(${Math.floor(this.colorSchemes[panelColor].bg.r / 2)},${Math.floor(
@@ -174,7 +174,7 @@ class Stats {
     return div;
   };
 
-  newPanelText = (panelType, appendTo) => {
+  panelText = (panelType, appendTo) => {
     const div = document.createElement("div");
     div.innerHTML = `<strong>${panelType.toUpperCase()}</strong>`;
     assignStyles(div, {
@@ -185,7 +185,7 @@ class Stats {
     return div;
   };
 
-  newPanelCanvas = (appendTo, bgColor) => {
+  panelCanvas = (appendTo, bgColor) => {
     const canv = document.createElement("canvas");
     canv.width = 74;
     canv.height = 30;
