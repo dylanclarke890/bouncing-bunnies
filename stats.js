@@ -75,19 +75,14 @@ var Stats = function () {
   parent.style.cursor = "pointer";
   parent.addEventListener("click", H, false);
   fpsDiv = document.createElement("div");
-  fpsDiv.style.backgroundColor =
-    "rgb(" +
-    Math.floor(y.fps.bg.r / 2) +
-    "," +
-    Math.floor(y.fps.bg.g / 2) +
-    "," +
-    Math.floor(y.fps.bg.b / 2) +
-    ")";
+  fpsDiv.style.backgroundColor = `rgb(${Math.floor(y.fps.bg.r / 2)},${Math.floor(
+    y.fps.bg.g / 2
+  )},${Math.floor(y.fps.bg.b / 2)})`;
   fpsDiv.style.padding = "2px 0px 3px 0px";
   parent.appendChild(fpsDiv);
   fpsText = document.createElement("div");
   fpsText.innerHTML = "<strong>FPS</strong>";
-  fpsText.style.color = "rgb(" + y.fps.fg.r + "," + y.fps.fg.g + "," + y.fps.fg.b + ")";
+  fpsText.style.color = `rgb(${y.fps.fg.r},${y.fps.fg.g},${y.fps.fg.b})`;
   fpsText.style.margin = "0px 0px 1px 3px";
   fpsDiv.appendChild(fpsText);
   canvas = document.createElement("canvas");
@@ -97,7 +92,7 @@ var Stats = function () {
   canvas.style.marginLeft = "3px";
   fpsDiv.appendChild(canvas);
   ctx = canvas.getContext("2d");
-  ctx.fillStyle = "rgb(" + y.fps.bg.r + "," + y.fps.bg.g + "," + y.fps.bg.b + ")";
+  ctx.fillStyle = `rgb(${y.fps.bg.r},${y.fps.bg.g},${y.fps.bg.b})`;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   B = ctx.getImageData(0, 0, canvas.width, canvas.height);
   msDiv = document.createElement("div");
@@ -114,7 +109,7 @@ var Stats = function () {
   parent.appendChild(msDiv);
   msText = document.createElement("div");
   msText.innerHTML = "<strong>MS</strong>";
-  msText.style.color = "rgb(" + y.ms.fg.r + "," + y.ms.fg.g + "," + y.ms.fg.b + ")";
+  msText.style.color = `rgb(${y.ms.fg.r},${y.ms.fg.g},${y.ms.fg.b})`;
   msText.style.margin = "0px 0px 1px 3px";
   msDiv.appendChild(msText);
   p = document.createElement("canvas");
@@ -133,20 +128,15 @@ var Stats = function () {
     }
   } catch (x) {}
   h = document.createElement("div");
-  h.style.backgroundColor =
-    "rgb(" +
-    Math.floor(y.mem.bg.r / 2) +
-    "," +
-    Math.floor(y.mem.bg.g / 2) +
-    "," +
-    Math.floor(y.mem.bg.b / 2) +
-    ")";
+  h.style.backgroundColor = `rgb(${Math.floor(y.mem.bg.r / 2)}, ${Math.floor(
+    y.mem.bg.g / 2
+  )}, ${Math.floor(y.mem.bg.b / 2)})`;
   h.style.padding = "2px 0px 3px 0px";
   h.style.display = "none";
   parent.appendChild(h);
   n = document.createElement("div");
   n.innerHTML = "<strong>MEM</strong>";
-  n.style.color = "rgb(" + y.mem.fg.r + "," + y.mem.fg.g + "," + y.mem.fg.b + ")";
+  n.style.color = `rgb(${y.mem.fg.r},${y.mem.fg.g},${y.mem.fg.b}`;
   n.style.margin = "0px 0px 1px 3px";
   h.appendChild(n);
   z = document.createElement("canvas");
