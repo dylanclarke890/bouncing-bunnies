@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<title>Bouncing Bunnies</title>
 	<meta charset="UTF-8">
@@ -85,35 +86,29 @@
 						c.drawImage(img, bunny.x, bunny.y);
 				}
 			}
-
 			var loop = setInterval(function () { render(); }, 1000 / 30);
-
 		}
 
 		function toggleSnapping() {
-
 			snapping = document.forms[0].snappingCheckbox.checked;
 			bcolor = snapping ? "rgba(200, 200, 255, 1)" : "rgba(255, 255, 255, 1)";
 			console.log(document.forms[0].snappingCheckbox.checked, snapping, typeof snapping);
 		}
 
-		//
-
 		var interval = setInterval(function () {
 			if (typeof Stats == 'function') {
 				clearInterval(interval);
-				var stats = new Stats();
-				stats.domElement.style.position = 'fixed';
-				stats.domElement.style.left = '0px';
-				stats.domElement.style.top = '0px';
-				document.body.appendChild(stats.domElement);
+				const stats = new Stats({
+					domElementStyles: {
+						position: "fixed",
+						left: "0px",
+						top: "0px",
+					},
+					appendTo: document.body
+				});
 				setInterval(function () { stats.update(); }, 1000 / 60);
-
 			}
 		}, 100);
-
-
-
 	</script>
 
 	<style type="text/css">

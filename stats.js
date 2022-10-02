@@ -35,7 +35,7 @@ function newCanvas(appendTo, bgColor) {
 }
 
 class Stats {
-  constructor() {
+  constructor({ ...settings } = {}) {
     const colorSchemes = {
       fps: new ColorScheme(
         {
@@ -205,6 +205,9 @@ class Stats {
       now = Date.now(),
       last = now,
       lastFrame = now;
+
+    if (settings.domElementStyles) assignStyles(parent, settings.domElementStyles);
+    if (settings.appendTo) settings.appendTo.appendChild(parent);
 
     this.domElement = parent;
     this.update = function () {
