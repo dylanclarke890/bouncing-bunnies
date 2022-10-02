@@ -1,10 +1,10 @@
 var Stats = function () {
-  let maxFps = 1000,
-    minFps = 0;
+  let maxFps = 0,
+    minFps = 1000;
   var j = 0,
     u = 2,
     C = 0,
-    E = new Date().getTime(),
+    E = Date.now(),
     w = E,
     f = E,
     fpsDiv,
@@ -87,8 +87,7 @@ var Stats = function () {
   parent.appendChild(fpsDiv);
   fpsText = document.createElement("div");
   fpsText.innerHTML = "<strong>FPS</strong>";
-  fpsText.style.color =
-    "rgb(" + y.fps.fg.r + "," + y.fps.fg.g + "," + y.fps.fg.b + ")";
+  fpsText.style.color = "rgb(" + y.fps.fg.r + "," + y.fps.fg.g + "," + y.fps.fg.b + ")";
   fpsText.style.margin = "0px 0px 1px 3px";
   fpsDiv.appendChild(fpsText);
   canvas = document.createElement("canvas");
@@ -98,8 +97,7 @@ var Stats = function () {
   canvas.style.marginLeft = "3px";
   fpsDiv.appendChild(canvas);
   ctx = canvas.getContext("2d");
-  ctx.fillStyle =
-    "rgb(" + y.fps.bg.r + "," + y.fps.bg.g + "," + y.fps.bg.b + ")";
+  ctx.fillStyle = "rgb(" + y.fps.bg.r + "," + y.fps.bg.g + "," + y.fps.bg.b + ")";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   B = ctx.getImageData(0, 0, canvas.width, canvas.height);
   msDiv = document.createElement("div");
@@ -116,8 +114,7 @@ var Stats = function () {
   parent.appendChild(msDiv);
   msText = document.createElement("div");
   msText.innerHTML = "<strong>MS</strong>";
-  msText.style.color =
-    "rgb(" + y.ms.fg.r + "," + y.ms.fg.g + "," + y.ms.fg.b + ")";
+  msText.style.color = "rgb(" + y.ms.fg.r + "," + y.ms.fg.g + "," + y.ms.fg.b + ")";
   msText.style.margin = "0px 0px 1px 3px";
   msDiv.appendChild(msText);
   p = document.createElement("canvas");
@@ -149,8 +146,7 @@ var Stats = function () {
   parent.appendChild(h);
   n = document.createElement("div");
   n.innerHTML = "<strong>MEM</strong>";
-  n.style.color =
-    "rgb(" + y.mem.fg.r + "," + y.mem.fg.g + "," + y.mem.fg.b + ")";
+  n.style.color = "rgb(" + y.mem.fg.r + "," + y.mem.fg.g + "," + y.mem.fg.b + ")";
   n.style.margin = "0px 0px 1px 3px";
   h.appendChild(n);
   z = document.createElement("canvas");
@@ -208,7 +204,7 @@ var Stats = function () {
     domElement: parent,
     update: function () {
       C++;
-      E = new Date().getTime();
+      E = Date.now();
       k = E - w;
       G = Math.min(G, k);
       a = Math.max(a, k);
