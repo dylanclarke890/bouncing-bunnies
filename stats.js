@@ -175,13 +175,14 @@ class Stats {
   };
 
   newPanelText = (panelType, appendTo) => {
-    const textDiv = document.createElement("div");
-    textDiv.innerHTML = `<strong>${panelType.toUpperCase()}</strong>`;
-    assignStyles(textDiv, {
+    const div = document.createElement("div");
+    div.innerHTML = `<strong>${panelType.toUpperCase()}</strong>`;
+    assignStyles(div, {
       color: `rgb(${this.colorSchemes[panelType].fg.r},${this.colorSchemes[panelType].fg.g},${this.colorSchemes[panelType].fg.b})`,
       margin: "0px 0px 1px 3px",
     });
-    appendTo.appendChild(textDiv);
+    appendTo.appendChild(div);
+    return div;
   };
 
   newPanelCanvas = (appendTo, bgColor) => {
