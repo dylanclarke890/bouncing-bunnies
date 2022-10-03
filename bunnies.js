@@ -7,17 +7,15 @@ class Bunny {
   }
 }
 
-let snapping = false;
-let bcolor = "rgba(255, 255, 255, 1)";
+let snapping = false,
+  bcolor = "rgba(255, 255, 255, 1)";
+const numBunnies = 3000,
+  gravity = 3,
+  img = new Image();
+img.src = "wabbit_alpha.png";
 
 function setup() {
-  const numBunnies = 3000;
-  let gravity = 3,
-    bunnies = [],
-    img = new Image();
-
-  img.src = "wabbit_alpha.png";
-
+  let bunnies = [];
   for (let i = 0; i < numBunnies; i++) bunnies.push(new Bunny());
 
   const canvas = document.getElementById("canvas");
@@ -45,10 +43,7 @@ function setup() {
       if (bunny.y > canvas.height) {
         bunny.speedY *= -0.8;
         bunny.y = canvas.height;
-
-        if (Math.random() > 0.5) {
-          bunny.speedY -= Math.random() * 12;
-        }
+        if (Math.random() > 0.5) bunny.speedY -= Math.random() * 12;
       } else if (bunny.y < 0) {
         bunny.speedY = 0;
         bunny.y = 0;
@@ -57,30 +52,30 @@ function setup() {
       if (snapping) ctx.drawImage(img, (0.5 + bunny.x) | 0, (0.5 + bunny.y) | 0);
       else ctx.drawImage(img, bunny.x, bunny.y);
     }
+
+    document.getElementById("snapped").addEventListener("change", toggleSnapping);
   }
-  var loop = setInterval(function () {
+  setInterval(function () {
     render();
   }, 1000 / 30);
 }
 
 function toggleSnapping() {
-  snapping = document.forms[0].snappingCheckbox.checked;
+  snapping = document.getElementById("snapped").checked;
   bcolor = snapping ? "rgba(200, 200, 255, 1)" : "rgba(255, 255, 255, 1)";
 }
 
-var interval = setInterval(function () {
-  if (typeof Stats == "function") {
-    clearInterval(interval);
-    const stats = new Stats({
-      domElementStyles: {
-        position: "fixed",
-        left: "0px",
-        top: "0px",
-      },
-      appendTo: document.body,
-    });
-    setInterval(function () {
-      stats.update();
-    }, 1000 / 60);
-  }
+const interval = setInterval(function () {
+  clearInterval(interval);
+  const stats = new Stats({
+    domElementStyles: {
+      position: "fixed",
+      left: "0px",
+      top: "0px",
+    },
+    appendTo: document.body,
+  });
+  setInterval(function () {
+    stats.update();
+  }, 1000 / 60);
 }, 100);
